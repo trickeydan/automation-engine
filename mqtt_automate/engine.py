@@ -9,6 +9,7 @@ from types import FrameType
 from typing import Any, Callable, Coroutine, Dict, Match, Optional
 
 from .config import MQTTAutomateConfig
+from .hue import HueWrapper  # TODO
 from .mqtt.topic import Topic
 from .mqtt.wrapper import MQTTWrapper
 from .version import __version__
@@ -43,6 +44,8 @@ class AutomationEngine:
         self._setup_event_loop()
         self._setup_mqtt()
         self._setup_handlers(handlers)
+
+        self.hue = HueWrapper(self._mqtt)
 
         self.wait_event = asyncio.Event()
 
