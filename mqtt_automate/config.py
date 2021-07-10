@@ -29,6 +29,7 @@ class MQTTAutomateConfig(BaseModel):
     """Config schema for MQTTAutomate."""
 
     mqtt: MQTTBrokerInfo
+    name: str
 
     class Config:
         """Pydantic config."""

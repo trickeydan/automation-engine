@@ -1,5 +1,7 @@
 # MQTT-Automate Default Config File
 
+name = "mqtt-automate"
+
 [mqtt]
 host = "::1"
 port = 1883

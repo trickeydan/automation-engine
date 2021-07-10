@@ -40,11 +40,9 @@ class AutomationEngine:
         verbose: bool,
         config_file: Optional[str],
         handlers: Dict[Topic, OnMessageHandler],
-        *,
-        name: str = "mqtt-automate",
     ) -> None:
         self.config = MQTTAutomateConfig.load(config_file)
-        self.name = name
+        self.name = self.config.name
 
         self._setup_logging(verbose)
         self._setup_event_loop()
