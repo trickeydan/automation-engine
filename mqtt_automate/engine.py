@@ -3,17 +3,24 @@ import asyncio
 import logging
 import signal
 import sys
+from functools import partial
 from signal import SIGHUP, SIGINT, SIGTERM
 from types import FrameType
-from typing import Optional
+from typing import Any, Callable, Coroutine, Dict, Match, Optional
 
 from .config import MQTTAutomateConfig
+from .mqtt.topic import Topic
 from .mqtt.wrapper import MQTTWrapper
 from .version import __version__
 
 LOGGER = logging.getLogger(__name__)
 
 loop = asyncio.get_event_loop()
+
+OnMessageHandler = Callable[
+    ['AutomationEngine', Match[str], str],
+    Coroutine[Any, Any, None],
+]
 
 
 class AutomationEngine:
@@ -25,6 +32,7 @@ class AutomationEngine:
         self,
         verbose: bool,
         config_file: Optional[str],
+        handlers: Dict[Topic, OnMessageHandler],
         *,
         name: str = "mqtt-automate",
     ) -> None:
@@ -34,6 +42,9 @@ class AutomationEngine:
         self._setup_logging(verbose)
         self._setup_event_loop()
         self._setup_mqtt()
+        self._setup_handlers(handlers)
+
+        self.wait_event = asyncio.Event()
 
     def _setup_logging(self, verbose: bool) -> None:
         if verbose:
@@ -65,6 +76,14 @@ class AutomationEngine:
             self.config.mqtt,
         )
 
+    def _setup_handlers(self, handlers: Dict[Topic, OnMessageHandler]) -> None:
+        """Setup the topic handlers."""
+        for topic, handler in handlers.items():
+            LOGGER.info(f"Registering action {handler.__name__} on {topic}")
+            final_handler = partial(handler, self)
+            final_handler.__name__ = handler.__name__  # type: ignore
+            self._mqtt.subscribe(str(topic), final_handler, no_prefix=True)
+
     def _exit(self, signals: signal.Signals, frame_type: FrameType) -> None:
         sys.exit(0)
 
@@ -73,8 +92,11 @@ class AutomationEngine:
         await self._mqtt.connect()
         LOGGER.info("Connected to MQTT Broker")
 
+        await self.wait_event.wait()
+
         await self._mqtt.disconnect()
 
     def halt(self) -> None:
         """Stop the component."""
+        self.wait_event.set()
         sys.exit(-1)

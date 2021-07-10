@@ -166,6 +166,8 @@ class MQTTWrapper:
         self,
         topic: str,
         callback: Handler,
+        *,
+        no_prefix: bool = False,
     ) -> None:
         """
         Subscribe to an MQTT Topic.
@@ -176,6 +178,8 @@ class MQTTWrapper:
         """
         if len(topic) == 0:
             topic_complete = Topic.parse(self.mqtt_prefix)
+        elif no_prefix:
+            topic_complete = Topic.parse(topic)
         else:
             topic_complete = Topic.parse(f"{self._broker_info.topic_prefix}/{topic}")
 

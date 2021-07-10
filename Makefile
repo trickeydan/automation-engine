@@ -3,7 +3,7 @@
 CMD:=poetry run
 PYMODULE:=mqtt_automate
 TESTS:=tests
-EXTRACODE:=
+EXTRACODE:=example.py
 
 all: type test lint
 
