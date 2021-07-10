@@ -207,7 +207,7 @@ test = ["atomicwrites (>=1.3.0)", "attrs (>=19.1.0)", "codecov (>=2.0.15)", "cov
 
 [[package]]
 name = "hue2mqtt"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python Hue to MQTT Bridge"
 category = "main"
 optional = true
@@ -508,7 +508,7 @@ hue = ["hue2mqtt"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "12866b8994e7da4cb2606132ecca2e809bce9be42f55ce6550f49a85954873f0"
+content-hash = "0abff89ceb33a2598fa7ff83f60cb949db369fb6427ce8132e13d1625973e0bf"
 
 [metadata.files]
 aiohttp = [
@@ -667,8 +667,8 @@ gmqtt = [
     {file = "gmqtt-0.6.9.tar.gz", hash = "sha256:0e98a964393834e724c93b5dce9524c9f1255c338c0d972188794f54c6559f04"},
 ]
 hue2mqtt = [
-    {file = "hue2mqtt-0.1.0-py3-none-any.whl", hash = "sha256:0e714bfb7dfb3640ef282785aabf4cb7054caa287945abe216d0a2175a243fdb"},
-    {file = "hue2mqtt-0.1.0.tar.gz", hash = "sha256:838985f205b4e35660657b53152c0f52eb12ca00e09a6404fc759744542a57c5"},
+    {file = "hue2mqtt-0.2.0-py3-none-any.whl", hash = "sha256:7f8171e649d0ae21c84c69e10c5989cb794858c5c3c165fbfec5e4d0d0cd3a41"},
+    {file = "hue2mqtt-0.2.0.tar.gz", hash = "sha256:d4d0dc26dcf100667f602b7c2d0d319ec957eab2ab41f4a290d2c991984e33e2"},
 ]
 idna = [
     {file = "idna-3.2-py3-none-any.whl", hash = "sha256:14475042e284991034cb48e06f6851428fb14c4dc953acd9be9a5e95c7b6dd7a"},

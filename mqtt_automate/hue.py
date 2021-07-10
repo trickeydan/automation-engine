@@ -1,7 +1,7 @@
 """Hue2MQTT Wrapper."""
 from typing import Any
 
-from hue2mqtt.schema import LightSetState
+from hue2mqtt.schema import LightSetState, GroupSetState
 
 from .mqtt.wrapper import MQTTWrapper
 
@@ -14,7 +14,7 @@ class HueWrapper:
 
     def set_group(self, group: int, **kwargs: Any) -> None:
         """Set the state of a group in Hue."""
-        state = LightSetState(**kwargs)
+        state = GroupSetState(**kwargs)
         self._mqtt.publish(
             f"hue2mqtt/group/{group}/set",
             state,
