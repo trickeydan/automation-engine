@@ -1,6 +1,7 @@
 """MQTT Automate API."""
 import argparse
 import asyncio
+import logging
 from pathlib import Path
 from typing import Callable, Dict, Match, Optional
 
@@ -8,6 +9,7 @@ from .engine import AutomationEngine, OnMessageHandler
 from .mqtt import Topic
 
 loop = asyncio.get_event_loop()
+LOGGER = logging.getLogger(__name__)
 
 
 class MQTTAutomate:
