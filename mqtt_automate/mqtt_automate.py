@@ -34,14 +34,16 @@ class MQTTAutomate:
     def on_message(self, topic: str) -> Callable[[OnMessageHandler], OnMessageHandler]:
         """Register a topic to react to."""
         def decorator(func: OnMessageHandler) -> OnMessageHandler:
-            # Register handler
-            self._handlers[Topic.parse(topic)] = func
 
             async def wrapper(
                 engine: AutomationEngine,
                 match: Match[str],
                 payload: str,
             ) -> None:
+                LOGGER.info(f"INVOKE {topic} -> {func.__name__}")
                 await func(engine, match, payload)
+
+            # Register handler
+            self._handlers[Topic.parse(topic)] = wrapper
             return wrapper
         return decorator
