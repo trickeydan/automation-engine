@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mqtt_automate"
-version = "0.2.0"
+version = "0.3.0"
 description = "Home Automation Engine powered by MQTT"
 authors = ["Dan Trickey <contact@trickey.io>"]
 license = "MIT"
