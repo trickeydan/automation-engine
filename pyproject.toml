@@ -18,7 +18,7 @@ python = "^3.8"
 gmqtt = "^0.6.9"
 pydantic = "^1.8.2"
 toml = "^0.10.2"
-hue2mqtt = { version = "^0.2.1", optional = true }
+hue2mqtt = { version = "^0.2.2", optional = true }
 
 [tool.poetry.extras]
 hue = ["hue2mqtt"]
