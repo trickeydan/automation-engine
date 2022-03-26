@@ -1,8 +1,8 @@
-"""MQTTAutomate Example."""
+"""Automation Engine Example."""
 import logging
 from typing import Match
 
-from mqtt_automate import AutomationEngine, MQTTAutomate
+from automation_engine import AutomationEngine, MQTTAutomate
 
 LOGGER = logging.getLogger(__name__)
 

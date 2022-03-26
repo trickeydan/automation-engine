@@ -1,7 +1,7 @@
 .PHONY: all clean lint type test test-cov
 
 CMD:=poetry run
-PYMODULE:=mqtt_automate
+PYMODULE:=automation_engine
 TESTS:=tests
 EXTRACODE:=example.py
 

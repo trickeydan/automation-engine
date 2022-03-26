@@ -7,9 +7,9 @@ import gmqtt
 import pytest
 from pydantic import BaseModel
 
-from mqtt_automate.config import MQTTBrokerInfo
-from mqtt_automate.mqtt.topic import Topic
-from mqtt_automate.mqtt.wrapper import MQTTWrapper
+from automation_engine.config import MQTTBrokerInfo
+from automation_engine.mqtt.topic import Topic
+from automation_engine.mqtt.wrapper import MQTTWrapper
 
 BROKER_INFO = MQTTBrokerInfo(
     host="localhost",
@@ -58,7 +58,7 @@ def test_wrapper_last_will_message_null() -> None:
 def test_wrapper_mqtt_prefix() -> None:
     """Test that the MQTT prefix is as expected."""
     wr = MQTTWrapper("foo", BROKER_INFO)
-    assert wr.mqtt_prefix == "mqtt-automate"
+    assert wr.mqtt_prefix == "automation-engine"
 
 
 def test_subscribe() -> None:
@@ -70,7 +70,7 @@ def test_subscribe() -> None:
     wr.subscribe("bees/+", stub_message_handler)
     assert len(wr._topic_handlers) == 1
     assert wr._topic_handlers[
-        Topic(["mqtt-automate", "bees", "+"])
+        Topic(["automation-engine", "bees", "+"])
     ] == stub_message_handler
 
 
@@ -105,7 +105,7 @@ async def test_handler_called() -> None:
     # Manually call on_message
     res = await wr.on_message(
         wr._client,
-        "mqtt-automate/bees/bar",
+        "automation-engine/bees/bar",
         b"hive",
         0,
         {},

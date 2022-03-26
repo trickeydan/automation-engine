@@ -1,8 +1,8 @@
-"""Test that the MQTTAutomate imports as expected."""
+"""Test that Automation Engine imports as expected."""
 
-import mqtt_automate
+import automation_engine
 
 
 def test_module() -> None:
     """Test that the module behaves as expected."""
-    assert mqtt_automate.__version__ is not None
+    assert automation_engine.__version__ is not None

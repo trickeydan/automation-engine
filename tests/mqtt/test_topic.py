@@ -4,7 +4,7 @@ from re import compile
 
 import pytest
 
-from mqtt_automate.mqtt import Topic
+from automation_engine.mqtt import Topic
 
 BASIC_TOPICS = [
     (["foo", "bar", "biz"], "foo/bar/biz"),

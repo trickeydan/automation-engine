@@ -7,7 +7,7 @@ from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
 import gmqtt
 from pydantic import BaseModel
 
-from mqtt_automate.config import MQTTBrokerInfo
+from automation_engine.config import MQTTBrokerInfo
 
 from .topic import Topic
 

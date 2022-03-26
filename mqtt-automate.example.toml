@@ -1,9 +1,0 @@
-# MQTT-Automate Default Config File
-
-name = "mqtt-automate"
-
-[mqtt]
-host = "::1"
-port = 1883
-enable_tls = false
-force_protocol_version_3_1 = true

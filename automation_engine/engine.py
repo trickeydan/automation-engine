@@ -1,4 +1,4 @@
-"""MQTTAutomate."""
+"""Automation Engine."""
 import asyncio
 import logging
 import signal
@@ -8,7 +8,7 @@ from signal import SIGHUP, SIGINT, SIGTERM
 from types import FrameType
 from typing import Any, Callable, Coroutine, Dict, Match, Optional
 
-from .config import MQTTAutomateConfig
+from .config import AutomationEngineConfig
 from .mqtt.topic import Topic
 from .mqtt.wrapper import MQTTWrapper
 from .version import __version__
@@ -33,7 +33,7 @@ OnMessageHandler = Callable[
 class AutomationEngine:
     """Home Automation Engine powered by MQTT."""
 
-    config: MQTTAutomateConfig
+    config: AutomationEngineConfig
 
     def __init__(
         self,
@@ -41,7 +41,7 @@ class AutomationEngine:
         config_file: Optional[str],
         handlers: Dict[Topic, OnMessageHandler],
     ) -> None:
-        self.config = MQTTAutomateConfig.load(config_file)
+        self.config = AutomationEngineConfig.load(config_file)
         self.name = self.config.name
 
         self._setup_logging(verbose)
@@ -71,7 +71,7 @@ class AutomationEngine:
             # Suppress INFO messages from gmqtt
             logging.getLogger("gmqtt").setLevel(logging.WARNING)
 
-        LOGGER.info(f"MQTTAutomate v{__version__} - {self.__doc__}")
+        LOGGER.info(f"Automation Engine v{__version__} - {self.__doc__}")
 
     def _setup_event_loop(self) -> None:
         loop.add_signal_handler(SIGHUP, self.halt)

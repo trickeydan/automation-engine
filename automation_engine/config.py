@@ -1,5 +1,5 @@
 """
-Configuration schema for MQTTAutomate.
+Configuration schema for Automation Engine.
 
 Common to all components.
 """
@@ -16,7 +16,7 @@ class MQTTBrokerInfo(BaseModel):
     host: str
     port: int
     enable_tls: bool = False
-    topic_prefix: str = "mqtt-automate"
+    topic_prefix: str = "automation-engine"
     force_protocol_version_3_1: bool = False
 
     class Config:
@@ -25,8 +25,8 @@ class MQTTBrokerInfo(BaseModel):
         extra = "forbid"
 
 
-class MQTTAutomateConfig(BaseModel):
-    """Config schema for MQTTAutomate."""
+class AutomationEngineConfig(BaseModel):
+    """Config schema for Automation Engine."""
 
     mqtt: MQTTBrokerInfo
     name: str
@@ -40,8 +40,8 @@ class MQTTAutomateConfig(BaseModel):
     def _get_config_path(cls, config_str: Optional[str] = None) -> Path:
         """Check for a config file or search the filesystem for one."""
         CONFIG_SEARCH_PATHS = [
-            Path("mqtt-automate.toml"),
-            Path("/etc/mqtt-automate.toml"),
+            Path("automation-engine.toml"),
+            Path("/etc/automation-engine.toml"),
         ]
         if config_str is None:
             for path in CONFIG_SEARCH_PATHS:
@@ -54,13 +54,13 @@ class MQTTAutomateConfig(BaseModel):
         raise FileNotFoundError("Unable to find config file.")
 
     @classmethod
-    def load(cls, config_str: Optional[str] = None) -> 'MQTTAutomateConfig':
+    def load(cls, config_str: Optional[str] = None) -> 'AutomationEngineConfig':
         """Load the config."""
         config_path = cls._get_config_path(config_str)
         with config_path.open("r") as fh:
             return cls.load_from_file(fh)
 
     @classmethod
-    def load_from_file(cls, fh: IO[str]) -> 'MQTTAutomateConfig':
+    def load_from_file(cls, fh: IO[str]) -> 'AutomationEngineConfig':
         """Load the config from a file."""
         return cls(**load(fh))
