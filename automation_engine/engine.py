@@ -25,12 +25,12 @@ LOGGER = logging.getLogger(__name__)
 loop = asyncio.get_event_loop()
 
 OnMessageHandler = Callable[
-    ['AutomationEngine', Match[str], str],
+    ['Engine', Match[str], str],
     Coroutine[Any, Any, None],
 ]
 
 
-class AutomationEngine:
+class Engine:
     """Home Automation Engine powered by MQTT."""
 
     config: AutomationEngineConfig

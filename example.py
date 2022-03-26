@@ -2,11 +2,11 @@
 import logging
 from typing import Match
 
-from automation_engine import AutomationEngine, MQTTAutomate
+from automation_engine import Engine, EngineRunner
 
 LOGGER = logging.getLogger(__name__)
 
-automate = MQTTAutomate()
+automate = EngineRunner()
 
 # Zigbee2MQTT Names
 LANDING_SWITCH = "switch_03"
@@ -17,7 +17,7 @@ GROUP_STAIRWELL = 10
 
 @automate.on_message(f"zigbee2mqtt/{LANDING_SWITCH}/action")
 async def landing_switch_action(
-    engine: AutomationEngine,
+    engine: Engine,
     match: Match[str],
     payload: str,
 ) -> None:
