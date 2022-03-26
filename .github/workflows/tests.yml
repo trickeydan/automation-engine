@@ -22,7 +22,7 @@ jobs:
       - name: Install APT dependencies
         run: sudo apt install mosquitto
       - name: Install Poetry
-        run: pip install poetry
+        run: pip install poetry -E all
       - name: Use in-project virtualenv
         run: poetry config virtualenvs.in-project true
       - uses: actions/cache@v2
