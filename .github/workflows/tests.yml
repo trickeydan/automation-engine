@@ -22,7 +22,7 @@ jobs:
       - name: Install APT dependencies
         run: sudo apt install mosquitto
       - name: Install Poetry
-        run: pip install poetry -E all
+        run: pip install poetry
       - name: Use in-project virtualenv
         run: poetry config virtualenvs.in-project true
       - uses: actions/cache@v2
@@ -30,7 +30,7 @@ jobs:
           path: .venv/
           key: ${{ runner.os }}-${{ matrix.python }}-pip-${{ hashFiles('poetry.lock') }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
-        run: poetry install
+        run: poetry install -E all
       - name: Lint
         run: make lint
       - name: Static type checking
