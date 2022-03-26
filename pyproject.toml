@@ -21,6 +21,7 @@ toml = "^0.10.2"
 hue2mqtt = { version = "^0.2.2", optional = true }
 
 [tool.poetry.extras]
+all = ["hue2mqtt"]
 hue = ["hue2mqtt"]
 
 [tool.poetry.dev-dependencies]
