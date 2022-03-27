@@ -1,6 +1,7 @@
 """MQTT Automate API."""
 import argparse
 import asyncio
+import json
 import logging
 from pathlib import Path
 from typing import Callable, Dict, List, Match, Optional
@@ -43,6 +44,27 @@ class EngineRunner:
             ) -> None:
                 LOGGER.info(f"INVOKE {topic} -> {func.__name__}")
                 await func(engine, match, payload)
+
+            # Register handler
+            self._handlers[Topic.parse(topic)] = wrapper
+            return wrapper
+        return decorator
+
+    def on_json(self, topic: str) -> Callable[[OnMessageHandler], OnMessageHandler]:
+        """Register a topic to decode as JSON and react to."""
+        def decorator(func: OnMessageHandler) -> OnMessageHandler:
+
+            async def wrapper(
+                engine: Engine,
+                match: Match[str],
+                payload: str,
+            ) -> None:
+                LOGGER.info(f"JSON {topic} -> {func.__name__}")
+                try:
+                    data = json.loads(payload)
+                    await func(engine, match, data)
+                except json.JSONDecodeError as e:
+                    LOGGER.warning(f"Unable to decode JSON: {e}")
 
             # Register handler
             self._handlers[Topic.parse(topic)] = wrapper
