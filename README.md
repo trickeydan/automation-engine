@@ -1,6 +1,14 @@
 # Automation Engine
 
-Automation Engine powered by MQTT
+A lightweight and flexible framework to automate things with MQTT.
+
+## What is Automation Engine?
+
+Automation Engine is a Python framework for building automations using MQTT. The most common use case for this is automating a smart home where devices publish their state to a MQTT broker.
+
+The leading self-hosted solution for this at the time of writing is [Home Assistant](https://www.home-assistant.io), which is a great piece of open-source software. However, the automations framework in Home Assistant is quite limited, and you usually have to build multiple flows to achieve a single "automation".
+
+Automation Engine is intended for home automation enthusiasts who prefer writing short snippets of Python, rather than building a large number of GUI "flows". As such, Automation Engine is similar to [NodeRED](https://nodered.org), but uses Python rather than a browser-based editor.
 
 ## Contributions
 
