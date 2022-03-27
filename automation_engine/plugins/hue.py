@@ -6,13 +6,17 @@ from typing import Any, Dict, Match
 from hue2mqtt.schema import GroupInfo, GroupSetState, LightInfo, LightSetState
 from pydantic import ValidationError
 
-from .mqtt.wrapper import MQTTWrapper
+from automation_engine.mqtt import MQTTWrapper
+
+from .plugin import Plugin
 
 LOGGER = logging.getLogger(__name__)
 
 
-class HueWrapper:
-    """Wrap Hue2MQTT."""
+class HuePlugin(Plugin):
+    """Plugin to wrap Hue2MQTT."""
+
+    name = "hue"
 
     def __init__(self, mqtt: MQTTWrapper) -> None:
         self._mqtt = mqtt

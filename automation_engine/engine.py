@@ -6,19 +6,12 @@ import sys
 from functools import partial
 from signal import SIGHUP, SIGINT, SIGTERM
 from types import FrameType
-from typing import Any, Callable, Coroutine, Dict, Match, Optional
+from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
 
 from .config import AutomationEngineConfig
-from .mqtt.topic import Topic
-from .mqtt.wrapper import MQTTWrapper
+from .mqtt import MQTTWrapper, Topic
+from .plugins.plugin import PluginManager, PluginT
 from .version import __version__
-
-try:
-    from .hue import HueWrapper
-    HUE = True
-except Exception:
-    HUE = False
-
 
 LOGGER = logging.getLogger(__name__)
 
@@ -40,6 +33,8 @@ class Engine:
         verbose: bool,
         config_file: Optional[str],
         handlers: Dict[Topic, OnMessageHandler],
+        *,
+        plugins: List[PluginT] = [],
     ) -> None:
         self.config = AutomationEngineConfig.load(config_file)
         self.name = self.config.name
@@ -49,8 +44,7 @@ class Engine:
         self._setup_mqtt()
         self._setup_handlers(handlers)
 
-        if HUE:
-            self.hue = HueWrapper(self._mqtt)
+        self.plugins = PluginManager(plugins, self._mqtt)
 
         self.wait_event = asyncio.Event()
 

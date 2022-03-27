@@ -3,9 +3,9 @@ import argparse
 import asyncio
 import logging
 from pathlib import Path
-from typing import Callable, Dict, Match, Optional
+from typing import Callable, Dict, List, Match, Optional
 
-from .engine import Engine, OnMessageHandler
+from .engine import Engine, OnMessageHandler, PluginT
 from .mqtt import Topic
 
 loop = asyncio.get_event_loop()
@@ -15,12 +15,13 @@ LOGGER = logging.getLogger(__name__)
 class EngineRunner:
     """Automation Engine Runner."""
 
-    def __init__(self) -> None:
+    def __init__(self, plugins: List[PluginT]) -> None:
+        self._plugins = plugins
         self._handlers: Dict[Topic, OnMessageHandler] = {}
 
     def app(self, verbose: bool, config_file: Optional[str]) -> None:
         """Main function for MQTTAutomate."""
-        mqtt = Engine(verbose, config_file, self._handlers)
+        mqtt = Engine(verbose, config_file, self._handlers, plugins=self._plugins)
         loop.run_until_complete(mqtt.run())
 
     def run(self) -> None:

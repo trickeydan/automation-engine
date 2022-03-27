@@ -3,10 +3,11 @@ import logging
 from typing import Match
 
 from automation_engine import Engine, EngineRunner
+from automation_engine.plugins.hue import HuePlugin
 
 LOGGER = logging.getLogger(__name__)
 
-automate = EngineRunner()
+automate = EngineRunner(plugins=[HuePlugin])
 
 # Zigbee2MQTT Names
 LANDING_SWITCH = "switch_03"
@@ -26,9 +27,9 @@ async def landing_switch_action(
 
     if payload == "on":
         # Turn on the stairwell lights
-        engine.hue.set_group(GROUP_STAIRWELL, on=True)
+        engine.plugins.hue.set_group(GROUP_STAIRWELL, on=True)
     elif payload == "off":
         # Turn off the stairwell lights
-        engine.hue.set_group(GROUP_STAIRWELL, on=False)
+        engine.plugins.hue.set_group(GROUP_STAIRWELL, on=False)
 
 automate.run()
