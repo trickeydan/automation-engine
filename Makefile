@@ -3,7 +3,7 @@
 CMD:=poetry run
 PYMODULE:=automation_engine
 TESTS:=tests
-EXTRACODE:=example.py
+EXTRACODE:=examples/
 
 all: type test lint
 

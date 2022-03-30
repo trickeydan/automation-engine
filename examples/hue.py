@@ -1,4 +1,4 @@
-"""Automation Engine Example."""
+"""Automation Engine Example to trigger Hue Lights."""
 import logging
 from typing import Any, Match
 
