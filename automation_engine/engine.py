@@ -1,104 +1,72 @@
-"""Automation Engine."""
+"""MQTT Automate API."""
+import argparse
 import asyncio
+import json
 import logging
-import signal
-import sys
-from functools import partial
-from signal import SIGHUP, SIGINT, SIGTERM
-from types import FrameType
-from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
+from pathlib import Path
+from typing import Callable, Dict, List, Match, Optional
 
-from .config import AutomationEngineConfig
-from .mqtt import MQTTWrapper, Topic
-from .plugins.plugin import PluginManager, PluginT
-from .version import __version__
-
-LOGGER = logging.getLogger(__name__)
+from .mqtt import Topic
+from .piston import OnMessageHandler, Piston, PluginT
 
 loop = asyncio.get_event_loop()
-
-OnMessageHandler = Callable[
-    ['Engine', Match[str], str],
-    Coroutine[Any, Any, None],
-]
+LOGGER = logging.getLogger(__name__)
 
 
-class Engine:
+class AutomationEngine:
     """Home Automation Engine powered by MQTT."""
 
-    config: AutomationEngineConfig
+    def __init__(self, plugins: List[PluginT]) -> None:
+        self._plugins = plugins
+        self._handlers: Dict[Topic, OnMessageHandler] = {}
 
-    def __init__(
-        self,
-        verbose: bool,
-        config_file: Optional[str],
-        handlers: Dict[Topic, OnMessageHandler],
-        *,
-        plugins: List[PluginT] = [],
-    ) -> None:
-        self.config = AutomationEngineConfig.load(config_file)
-        self.name = self.config.name
+    def app(self, verbose: bool, config_file: Optional[str]) -> None:
+        """Main function for MQTTAutomate."""
+        mqtt = Piston(verbose, config_file, self._handlers, plugins=self._plugins)
+        loop.run_until_complete(mqtt.run())
 
-        self._setup_logging(verbose)
-        self._setup_event_loop()
-        self._setup_mqtt()
-        self._setup_handlers(handlers)
+    def run(self) -> None:
+        """Start the automation engine."""
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-v", "--verbose", action="store_true")
+        parser.add_argument("-c", "--config-file", type=Path, default=None)
+        args = parser.parse_args()
+        self.app(args.verbose, args.config_file)
 
-        self.plugins = PluginManager(plugins, self._mqtt)
+    def on_message(self, topic: str) -> Callable[[OnMessageHandler], OnMessageHandler]:
+        """Register a topic to react to."""
+        def decorator(func: OnMessageHandler) -> OnMessageHandler:
 
-        self.wait_event = asyncio.Event()
+            async def wrapper(
+                piston: Piston,
+                match: Match[str],
+                payload: str,
+            ) -> None:
+                LOGGER.info(f"INVOKE {topic} -> {func.__name__}")
+                await func(piston, match, payload)
 
-    def _setup_logging(self, verbose: bool) -> None:
-        if verbose:
-            logging.basicConfig(
-                level=logging.DEBUG,
-                format=f"%(asctime)s {self.name} %(name)s %(levelname)s %(message)s",
-                datefmt="%Y-%m-%d %H:%M:%S",
-            )
-        else:
-            logging.basicConfig(
-                level=logging.INFO,
-                format=f"%(asctime)s {self.name} %(levelname)s %(message)s",
-                datefmt="%Y-%m-%d %H:%M:%S",
-            )
+            # Register handler
+            self._handlers[Topic.parse(topic)] = wrapper
+            return wrapper
+        return decorator
 
-            # Suppress INFO messages from gmqtt
-            logging.getLogger("gmqtt").setLevel(logging.WARNING)
+    def on_json(self, topic: str) -> Callable[[OnMessageHandler], OnMessageHandler]:
+        """Register a topic to decode as JSON and react to."""
+        def decorator(func: OnMessageHandler) -> OnMessageHandler:
 
-        LOGGER.info(f"Automation Engine v{__version__} - {self.__doc__}")
+            async def wrapper(
+                piston: Piston,
+                match: Match[str],
+                payload: str,
+            ) -> None:
+                LOGGER.info(f"JSON {topic} -> {func.__name__}")
+                try:
+                    data = json.loads(payload)
+                    await func(piston, match, data)
+                except json.JSONDecodeError as e:
+                    LOGGER.warning(f"Unable to decode JSON: {e}")
 
-    def _setup_event_loop(self) -> None:
-        loop.add_signal_handler(SIGHUP, self.halt)
-        loop.add_signal_handler(SIGINT, self.halt)
-        loop.add_signal_handler(SIGTERM, self.halt)
-
-    def _setup_mqtt(self) -> None:
-        self._mqtt = MQTTWrapper(
-            self.name,
-            self.config.mqtt,
-        )
-
-    def _setup_handlers(self, handlers: Dict[Topic, OnMessageHandler]) -> None:
-        """Setup the topic handlers."""
-        for topic, handler in handlers.items():
-            LOGGER.info(f"Registering action {handler.__name__} on {topic}")
-            final_handler = partial(handler, self)
-            final_handler.__name__ = handler.__name__  # type: ignore
-            self._mqtt.subscribe(str(topic), final_handler, no_prefix=True)
-
-    def _exit(self, signals: signal.Signals, frame_type: FrameType) -> None:
-        sys.exit(0)
-
-    async def run(self) -> None:
-        """Entrypoint for the data component."""
-        await self._mqtt.connect()
-        LOGGER.info("Connected to MQTT Broker")
-
-        await self.wait_event.wait()
-
-        await self._mqtt.disconnect()
-
-    def halt(self) -> None:
-        """Stop the component."""
-        self.wait_event.set()
-        sys.exit(-1)
+            # Register handler
+            self._handlers[Topic.parse(topic)] = wrapper
+            return wrapper
+        return decorator
