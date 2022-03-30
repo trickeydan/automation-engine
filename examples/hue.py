@@ -2,12 +2,12 @@
 import logging
 from typing import Any, Match
 
-from automation_engine import Engine, EngineRunner
+from automation_engine import AutomationEngine, Piston
 from automation_engine.plugins.hue import HuePlugin
 
 LOGGER = logging.getLogger(__name__)
 
-automate = EngineRunner(plugins=[HuePlugin])
+engine = AutomationEngine(plugins=[HuePlugin])
 
 # Zigbee2MQTT Names
 LANDING_SWITCH = "switch_03"
@@ -16,9 +16,9 @@ LANDING_SWITCH = "switch_03"
 GROUP_STAIRWELL = 10
 
 
-@automate.on_message(f"zigbee2mqtt/{LANDING_SWITCH}/action")
+@engine.on_message(f"zigbee2mqtt/{LANDING_SWITCH}/action")
 async def landing_switch_action(
-    engine: Engine,
+    piston: Piston,
     match: Match[str],
     payload: str,
 ) -> None:
@@ -27,15 +27,15 @@ async def landing_switch_action(
 
     if payload == "on":
         # Turn on the stairwell lights
-        engine.plugins.hue.set_group(GROUP_STAIRWELL, on=True)
+        piston.plugins.hue.set_group(GROUP_STAIRWELL, on=True)
     elif payload == "off":
         # Turn off the stairwell lights
-        engine.plugins.hue.set_group(GROUP_STAIRWELL, on=False)
+        piston.plugins.hue.set_group(GROUP_STAIRWELL, on=False)
 
 
-@automate.on_json(f"zigbee2mqtt/{LANDING_SWITCH}/json")
+@engine.on_json(f"zigbee2mqtt/{LANDING_SWITCH}/json")
 async def landing_switch_json(
-    engine: Engine,
+    piston: Piston,
     match: Match[str],
     payload: Any,
 ) -> None:
@@ -44,9 +44,9 @@ async def landing_switch_json(
 
     if payload["action"] == "on":
         # Turn on the stairwell lights
-        engine.plugins.hue.set_group(GROUP_STAIRWELL, on=True)
+        piston.plugins.hue.set_group(GROUP_STAIRWELL, on=True)
     elif payload["action"] == "off":
         # Turn off the stairwell lights
-        engine.plugins.hue.set_group(GROUP_STAIRWELL, on=False)
+        piston.plugins.hue.set_group(GROUP_STAIRWELL, on=False)
 
-automate.run()
+engine.run()
