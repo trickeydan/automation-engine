@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "automation_engine"
-version = "0.4.0a1"
+version = "0.4.0"
 description = "Automation Engine powered by MQTT"
 authors = ["Dan Trickey <contact@trickey.io>"]
 license = "MIT"
