@@ -1,4 +1,4 @@
-"""MQTT Automate API."""
+"""Automation Engine API."""
 import argparse
 import asyncio
 import json
@@ -21,9 +21,9 @@ class AutomationEngine:
         self._handlers: Dict[Topic, OnMessageHandler] = {}
 
     def app(self, verbose: bool, config_file: Optional[str]) -> None:
-        """Main function for MQTTAutomate."""
-        mqtt = Piston(verbose, config_file, self._handlers, plugins=self._plugins)
-        loop.run_until_complete(mqtt.run())
+        """Main function for Automation Engine."""
+        piston = Piston(verbose, config_file, self._handlers, plugins=self._plugins)
+        loop.run_until_complete(piston.run())
 
     def run(self) -> None:
         """Start the automation engine."""
