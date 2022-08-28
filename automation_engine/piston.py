@@ -44,7 +44,7 @@ class Piston:
         self._setup_mqtt()
         self._setup_handlers(handlers)
 
-        self.plugins = PluginManager(plugins, self._mqtt)
+        self.plugins = PluginManager(plugins, self.config, self._mqtt)
 
         self.wait_event = asyncio.Event()
 

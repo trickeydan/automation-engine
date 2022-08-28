@@ -231,19 +231,19 @@ test = ["atomicwrites (>=1.3.0)", "attrs (>=19.1.0)", "codecov (>=2.0.15)", "cov
 
 [[package]]
 name = "hue2mqtt"
-version = "0.2.2"
+version = "0.4.0"
 description = "Python Hue to MQTT Bridge"
 category = "main"
 optional = true
 python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
-aiohttp = ">=3.7.4,<4.0.0"
+aiohttp = ">=3.8.1,<4.0.0"
 aiohue = ">=2.5.1,<3.0.0"
-click = ">=8.0.1,<9.0.0"
-gmqtt = ">=0.6.9,<0.7.0"
-pydantic = ">=1.8.2,<2.0.0"
-toml = ">=0.10.2,<0.11.0"
+click = ">=8.1.3,<9.0.0"
+gmqtt = ">=0.6.10,<0.7.0"
+pydantic = ">=1.9.2,<2.0.0"
+tomli = {version = ">=2.0.1,<3.0.0", markers = "python_version <= \"3.10\""}
 
 [[package]]
 name = "idna"
@@ -496,14 +496,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "toml"
-version = "0.10.2"
-description = "Python Library for Tom's Obvious, Minimal Language"
-category = "main"
-optional = true
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-
-[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -538,7 +530,7 @@ hue = ["hue2mqtt"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8201bd7d31411cd96dbdbc9c79c34cbac923dce98b7b50469fe4e53633dbc2f1"
+content-hash = "0abd56be6f117a920eeb78ab2b489af5ae699e73f7007332907c372f909945f1"
 
 [metadata.files]
 aiohttp = [
@@ -666,10 +658,7 @@ gmqtt = [
     {file = "gmqtt-0.6.11-py3-none-any.whl", hash = "sha256:de728635f9fb15288e1b2da1591a091653e1ce4bc8be031f4ef4ef4da57af955"},
     {file = "gmqtt-0.6.11.tar.gz", hash = "sha256:0be6d57841538abc3ae0a41131c6d53314e0705b74876a6f94bc903df1209fb6"},
 ]
-hue2mqtt = [
-    {file = "hue2mqtt-0.2.2-py3-none-any.whl", hash = "sha256:0da814b35649dae97cb6e9ae2e8444ce0c78706c2e68fe695e38ed0b3f2b109a"},
-    {file = "hue2mqtt-0.2.2.tar.gz", hash = "sha256:030be1102d228d323a5c0d19a85a578a8fc7ccd4b154913c00d76f1a1a1ff5ae"},
-]
+hue2mqtt = []
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
     {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
@@ -786,10 +775,6 @@ rope = []
 snowballstemmer = [
     {file = "snowballstemmer-2.2.0-py2.py3-none-any.whl", hash = "sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a"},
     {file = "snowballstemmer-2.2.0.tar.gz", hash = "sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1"},
-]
-toml = [
-    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
-    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
