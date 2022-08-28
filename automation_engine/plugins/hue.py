@@ -23,8 +23,18 @@ class HuePlugin(Plugin):
         self.lights: Dict[str, LightInfo] = {}
         self.groups: Dict[int, GroupInfo] = {}
 
-        self._mqtt.subscribe("hue2mqtt/light/+", self._handle_light_event, no_prefix=True)
-        self._mqtt.subscribe("hue2mqtt/group/+", self._handle_group_event, no_prefix=True)
+        self._topic_prefix = "hue2mqtt"
+
+        self._mqtt.subscribe(
+            f"{self._topic_prefix}/light/+",
+            self._handle_light_event,
+            no_prefix=True,
+        )
+        self._mqtt.subscribe(
+            f"{self._topic_prefix}/group/+",
+            self._handle_group_event,
+            no_prefix=True,
+        )
 
     async def _handle_light_event(self, match: Match[str], payload: str) -> None:
         uniqueid = match.group(1)
@@ -58,7 +68,7 @@ class HuePlugin(Plugin):
         """Set the state of a group in Hue."""
         state = GroupSetState(**kwargs)
         self._mqtt.publish(
-            f"hue2mqtt/group/{group}/set",
+            f"{self._topic_prefix}/group/{group}/set",
             state,
             auto_prefix_topic=False,
         )
@@ -77,7 +87,7 @@ class HuePlugin(Plugin):
         """Set the state of a light in Hue."""
         state = LightSetState(**kwargs)
         self._mqtt.publish(
-            f"hue2mqtt/light/{light}/set",
+            f"{self._topic_prefix}/light/{light}/set",
             state,
             auto_prefix_topic=False,
         )
