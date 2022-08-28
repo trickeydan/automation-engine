@@ -7,7 +7,12 @@ from pathlib import Path
 from typing import IO, Optional
 
 from pydantic import BaseModel
-from toml import load
+
+# Backwards compatibility for TOML in stdlib from Python 3.11
+try:
+    import tomllib  # type: ignore[import]
+except ModuleNotFoundError:
+    import tomli as tomllib  # type: ignore[no-redef]
 
 
 class MQTTBrokerInfo(BaseModel):
@@ -57,10 +62,10 @@ class AutomationEngineConfig(BaseModel):
     def load(cls, config_str: Optional[str] = None) -> 'AutomationEngineConfig':
         """Load the config."""
         config_path = cls._get_config_path(config_str)
-        with config_path.open("r") as fh:
+        with config_path.open("rb") as fh:
             return cls.load_from_file(fh)
 
     @classmethod
-    def load_from_file(cls, fh: IO[str]) -> 'AutomationEngineConfig':
+    def load_from_file(cls, fh: IO[bytes]) -> 'AutomationEngineConfig':
         """Load the config from a file."""
-        return cls(**load(fh))
+        return cls(**tomllib.load(fh))
