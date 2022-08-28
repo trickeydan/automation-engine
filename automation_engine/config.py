@@ -4,7 +4,7 @@ Configuration schema for Automation Engine.
 Common to all components.
 """
 from pathlib import Path
-from typing import IO, Optional
+from typing import IO, Any, Dict, Optional
 
 from pydantic import BaseModel
 
@@ -35,6 +35,8 @@ class AutomationEngineConfig(BaseModel):
 
     mqtt: MQTTBrokerInfo
     name: str
+
+    plugins: Dict[str, Any] = {}
 
     class Config:
         """Pydantic config."""
