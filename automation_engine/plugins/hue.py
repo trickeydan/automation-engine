@@ -18,12 +18,17 @@ class HuePlugin(Plugin):
 
     name = "hue"
 
-    def __init__(self, mqtt: MQTTWrapper) -> None:
+    class Config(Plugin.Config):
+        """Hue2MQTT Plugin Config Schema."""
+
+        topic_prefix: str = "hue2mqtt"
+
+    def __init__(self, mqtt: MQTTWrapper, config: Config) -> None:
         self._mqtt = mqtt
         self.lights: Dict[str, LightInfo] = {}
         self.groups: Dict[int, GroupInfo] = {}
 
-        self._topic_prefix = "hue2mqtt"
+        self._topic_prefix = config.topic_prefix
 
         self._mqtt.subscribe(
             f"{self._topic_prefix}/light/+",
