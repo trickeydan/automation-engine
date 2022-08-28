@@ -1,0 +1,9 @@
+# Automation Engine Default Config File
+
+name = "automation-engine"
+
+[mqtt]
+host = "::1"
+port = 1883
+enable_tls = false
+force_protocol_version_3_1 = true
