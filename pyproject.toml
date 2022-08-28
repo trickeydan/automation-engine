@@ -15,9 +15,9 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-gmqtt = "^0.6.9"
-pydantic = "^1.8.2"
-toml = "^0.10.2"
+gmqtt = "^0.6.10"
+pydantic = "^1.9.2"
+tomli = { version = "^2.0.1", python = "<=3.10" }
 hue2mqtt = { version = "^0.2.2", optional = true }
 
 [tool.poetry.extras]
@@ -38,7 +38,6 @@ pytest = "*"
 pytest-cov = "*"
 rope = "*"
 isort = {version = "*",extras = ["pyproject"]}
-types-toml = "*"
 pytest-asyncio = "*"
 
 [build-system]
