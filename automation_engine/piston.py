@@ -8,6 +8,8 @@ from signal import SIGHUP, SIGINT, SIGTERM
 from types import FrameType
 from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
 
+from prometheus_client import start_http_server
+
 from .config import AutomationEngineConfig
 from .mqtt import MQTTWrapper, Topic
 from .plugins.plugin import PluginManager, PluginT
@@ -91,6 +93,7 @@ class Piston:
 
     async def run(self) -> None:
         """Entrypoint for the data component."""
+        start_http_server(self.config.metrics_port)
         await self._mqtt.connect()
         LOGGER.info("Connected to MQTT Broker")
 

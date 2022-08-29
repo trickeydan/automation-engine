@@ -35,6 +35,7 @@ class AutomationEngineConfig(BaseModel):
 
     mqtt: MQTTBrokerInfo
     name: str
+    metrics_port: int = 9832
 
     plugins: Dict[str, Any] = {}
 

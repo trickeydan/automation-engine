@@ -1,6 +1,7 @@
 # Automation Engine Default Config File
 
 name = "automation-engine"
+metrics_port = 9832
 
 [mqtt]
 host = "::1"

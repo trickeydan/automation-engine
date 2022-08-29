@@ -10,6 +10,10 @@ The leading self-hosted solution for this at the time of writing is [Home Assist
 
 Automation Engine is intended for home automation enthusiasts who prefer writing short snippets of Python, rather than building a large number of GUI "flows". As such, Automation Engine is similar to [NodeRED](https://nodered.org), but uses Python rather than a browser-based editor.
 
+## Prometheus Metrics
+
+Prometheus metrics are exposed on port `9832` by default. The port can be configured via the `metrics_port` config key.
+
 ## Contributions
 
 This project is released under the MIT Licence. For more information, please see LICENSE.

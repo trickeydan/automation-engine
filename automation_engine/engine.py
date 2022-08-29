@@ -6,11 +6,25 @@ import logging
 from pathlib import Path
 from typing import Callable, Dict, List, Match, Optional
 
+from prometheus_client import Counter
+
 from .mqtt import Topic
 from .piston import OnMessageHandler, Piston, PluginT
 
 loop = asyncio.get_event_loop()
 LOGGER = logging.getLogger(__name__)
+
+
+AUTOMATIONS_TRIGGERED = Counter(
+    'automation_engine_invoked',
+    'Number of invoked automations',
+    ['name', 'data_type'],
+)
+AUTOMATIONS_BAD_JSON = Counter(
+    'automation_engine_bad_json',
+    'Number of invoked JSON triggers with bad JSON',
+    ['name'],
+)
 
 
 class AutomationEngine:
@@ -43,6 +57,7 @@ class AutomationEngine:
                 payload: str,
             ) -> None:
                 LOGGER.info(f"INVOKE {topic} -> {func.__name__}")
+                AUTOMATIONS_TRIGGERED.labels(name=func.__name__, data_type="str").inc()
                 await func(piston, match, payload)
 
             # Register handler
@@ -59,11 +74,14 @@ class AutomationEngine:
                 match: Match[str],
                 payload: str,
             ) -> None:
-                LOGGER.info(f"JSON {topic} -> {func.__name__}")
+                name = func.__name__
+                LOGGER.info(f"JSON {topic} -> {name}")
                 try:
                     data = json.loads(payload)
+                    AUTOMATIONS_TRIGGERED.labels(name=name, data_type='json').inc()
                     await func(piston, match, data)
                 except json.JSONDecodeError as e:
+                    AUTOMATIONS_BAD_JSON.labels(name=name).inc()
                     LOGGER.warning(f"Unable to decode JSON: {e}")
 
             # Register handler
