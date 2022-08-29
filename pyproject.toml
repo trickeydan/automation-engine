@@ -19,6 +19,7 @@ gmqtt = "^0.6.10"
 pydantic = "^1.9.2"
 tomli = { version = "^2.0.1", python = "<=3.10" }
 hue2mqtt = { version = "^0.4.0", optional = true }
+prometheus-client = "^0.14.1"
 
 [tool.poetry.extras]
 all = ["hue2mqtt"]

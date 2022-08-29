@@ -5,6 +5,7 @@ import logging
 from typing import Any, Callable, Coroutine, Dict, List, Match, Optional
 
 import gmqtt
+from prometheus_client import Counter
 from pydantic import BaseModel
 
 from automation_engine.config import MQTTBrokerInfo
@@ -14,6 +15,11 @@ from .topic import Topic
 LOGGER = logging.getLogger(__name__)
 
 Handler = Callable[[Match[str], str], Coroutine[Any, Any, None]]
+
+RECEIVED_MQTT = Counter(
+    'automation_engine_mqtt_received',
+    'Number of received MQTT messages',
+)
 
 
 class MQTTWrapper:
@@ -121,6 +127,7 @@ class MQTTWrapper:
     ) -> gmqtt.constants.PubRecReasonCode:
         """Callback for mqtt messages."""
         LOGGER.debug(f"Message received on {topic} with payload: {payload!r}")
+        RECEIVED_MQTT.inc()
         for t, handler in self._topic_handlers.items():
             match = t.match(topic)
             if match:
